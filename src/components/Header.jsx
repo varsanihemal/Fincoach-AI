@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { LayoutDashboard, PenBox } from "lucide-react";
+import { useEffect, useState } from "react";
+// import { checkUser } from "@/lib/checkUser";
 
 const FinCoachLogo = () => (
   <svg width="160" height="40" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
@@ -29,6 +30,7 @@ const FinCoachLogo = () => (
 );
 
 const Header = () => {
+  // await checkUser();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {

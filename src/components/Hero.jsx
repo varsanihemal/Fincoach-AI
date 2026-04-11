@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { heroContent, stats, dashboardCards, bars, features } from "@/data/landing";
 
+
 const Hero = () => {
   return (
     <section className="relative overflow-hidden bg-[#06090f] min-h-screen">
