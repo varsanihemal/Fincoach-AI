@@ -41,12 +41,12 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-8 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#06090f]/90 backdrop-blur-md border-b border-white/[0.06]"
-          : "bg-transparent"
-      }`}
-    >
+  className={`fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-8 transition-all duration-300 ${
+    scrolled
+      ? "bg-[#06090f]/90 backdrop-blur-md border-b border-white/[0.06]"
+      : "bg-[#06090f]/80 backdrop-blur-md border-b border-white/[0.04]"
+  }`}
+>
       <Link href="/" className="flex items-center">
         <FinCoachLogo />
       </Link>
