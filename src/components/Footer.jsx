@@ -133,7 +133,7 @@ const Footer = () => {
         </div>
 
         {/* Newsletter strip */}
-        <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 mb-12 flex items-center justify-between gap-6 flex-wrap">
+        {/* <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 mb-12 flex items-center justify-between gap-6 flex-wrap">
           <div>
             <div className="text-sm font-semibold text-slate-200 mb-1">Stay in the loop</div>
             <div className="text-sm text-slate-500">Weekly finance tips and product updates.</div>
@@ -154,7 +154,7 @@ const Footer = () => {
               Subscribe
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Bottom bar */}
         <div className="flex items-center justify-between pt-6 border-t border-white/[0.05] flex-wrap gap-4">

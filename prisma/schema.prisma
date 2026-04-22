@@ -84,7 +84,7 @@ enum TransactionType {
 }
 
 enum AccountType {
-  CURRENT
+  CHECKING
   SAVINGS
 }
 

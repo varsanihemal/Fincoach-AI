@@ -3,29 +3,25 @@ import { accountSchema } from "@/app/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "./ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { Switch } from "./ui/switch";
 import { Button } from "./ui/button";
-import { Wallet, TrendingUp, PiggyBank, CreditCard } from "lucide-react";
+import { Wallet, PiggyBank, Loader2 } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
+import useFetch from "@/hooks/use-fetch";
+import { createAccount } from "@/actions/dashboard";
 
 const accountTypes = [
   { value: "CHECKING", label: "Checking", icon: Wallet },
   { value: "SAVINGS", label: "Savings", icon: PiggyBank },
-  { value: "INVESTMENT", label: "Investment", icon: TrendingUp },
-  { value: "CREDIT", label: "Credit Card", icon: CreditCard },
 ];
 
-const CreateAccount = ({ onSubmit: handleFormSubmit }) => {
+const CreateAccount = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setValue,
     watch,
     reset,
@@ -39,16 +35,37 @@ const CreateAccount = ({ onSubmit: handleFormSubmit }) => {
     },
   });
 
+  const {
+    data: newAccount,
+    error,
+    fn: createAccountFn,
+    loading: createAccountLoading,
+  } = useFetch(createAccount);
+
+  // Success
+  useEffect(() => {
+    if (newAccount?.success) {
+      toast.success("Account created successfully!");
+      reset();
+    }
+  }, [newAccount, reset]);
+
+  // Error
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message || "Failed to create account");
+    }
+  }, [error]);
+
   const selectedType = watch("type");
   const isDefault = watch("isDefault");
 
   const onSubmit = async (data) => {
-    if (handleFormSubmit) await handleFormSubmit(data);
-    reset();
+    await createAccountFn(data);
   };
 
   return (
-    <div className="bg-[#06090f] border border-white/[0.08] rounded-2xl p-6 w-full max-w-md">
+    <div className="bg-[#06090f] border border-white/[0.08] rounded-2xl p-6 w-full">
 
       {/* Header */}
       <div className="mb-6">
@@ -154,15 +171,22 @@ const CreateAccount = ({ onSubmit: handleFormSubmit }) => {
         {/* Submit */}
         <Button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full h-10 rounded-xl text-sm font-bold text-white border-0 mt-2"
+          disabled={createAccountLoading}
+          className="w-full h-10 rounded-xl text-sm font-bold text-white border-0 mt-2 flex items-center justify-center gap-2"
           style={{
             background: "linear-gradient(135deg,#185FA5,#1a7cc7)",
             boxShadow: "0 0 0 1px rgba(91,168,232,0.25)",
-            opacity: isSubmitting ? 0.6 : 1,
+            opacity: createAccountLoading ? 0.6 : 1,
           }}
         >
-          {isSubmitting ? "Creating..." : "Create account"}
+          {createAccountLoading ? (
+            <>
+              <Loader2 size={15} className="animate-spin" />
+              Creating...
+            </>
+          ) : (
+            "Create account"
+          )}
         </Button>
       </form>
     </div>

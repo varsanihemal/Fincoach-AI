@@ -21,7 +21,7 @@ const Dashboard = async () => {
         }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-8 pt-24 pb-16">
+      <div className="relative z-10 max-w-6xl mx-auto px-8 pt-10 pb-16">
 
         {/* Page header */}
         <div className="mb-10">
