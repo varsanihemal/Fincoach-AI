@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
-import AiChat from "@/components/AiChat";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +22,6 @@ export default function RootLayout({ children }) {
           <Toaster theme="dark" />
           <main className="min-h-screen bg-[#06090f]">{children}</main>
           <Footer />
-          <AiChat />
         </body>
       </html>
     </ClerkProvider>
