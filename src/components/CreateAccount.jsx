@@ -1,5 +1,5 @@
 "use client";
-import { accountSchema } from "@/app/lib/schema";
+import { accountSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "./ui/input";

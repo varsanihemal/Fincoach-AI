@@ -1,12 +1,15 @@
 import { inngest } from "@/lib/inngest/client";
 import { db } from "@/lib/prisma";
+import { sendEmail } from "@/lib/sendEmail";
+import BudgetAlertEmail from "@/emails/BudgetAlertEmail";
+import MonthlyInsightEmail from "@/emails/MonthlyInsightEmail";
 
-
+// ── 1. Check budget alerts (runs daily at 6am) ──────────────
 export const checkBudgetAlerts = inngest.createFunction(
   {
     id: "check-budget-alerts",
     name: "Check Budget Alerts",
-    triggers: [{ cron: "0 6 * * *" }], // ← trigger inside first arg, cron fixed
+    triggers: [{ cron: "0 6 * * *" }],
   },
   async ({ step }) => {
     const budgets = await step.run("get-budgets", async () => {
@@ -14,9 +17,7 @@ export const checkBudgetAlerts = inngest.createFunction(
         include: {
           user: {
             include: {
-              accounts: {
-                where: { isDefault: true },
-              },
+              accounts: { where: { isDefault: true } },
             },
           },
         },
@@ -28,20 +29,16 @@ export const checkBudgetAlerts = inngest.createFunction(
       if (!defaultAccount) continue;
 
       await step.run(`check-budget-${budget.id}`, async () => {
-        // Get start of current month
         const now = new Date();
-        const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
         const expenses = await db.transaction.aggregate({
           where: {
             userId: budget.userId,
             accountId: defaultAccount.id,
             type: "EXPENSE",
-            date: {
-              gte: startDate,
-              lte: endDate,
-            },
+            date: { gte: startOfMonth, lte: endOfMonth },
           },
           _sum: { amount: true },
         });
@@ -59,16 +56,108 @@ export const checkBudgetAlerts = inngest.createFunction(
             isNewMonth(new Date(budget.lastAlertSent), now));
 
         if (shouldAlert) {
-          // TODO: send email alert here
-          console.log(
-            `Budget alert for ${budget.user.name}: ${percentageUsed.toFixed(1)}% used`
-          );
+          await sendEmail({
+            to: budget.user.email,
+            subject:
+              percentageUsed >= 100
+                ? "🚨 You've exceeded your monthly budget — FinCoach"
+                : `⚠️ You've used ${percentageUsed.toFixed(0)}% of your budget — FinCoach`,
+            react: BudgetAlertEmail({
+              userName: budget.user.name,
+              budgetAmount,
+              totalExpenses,
+              percentageUsed,
+              accountName: defaultAccount.name,
+            }),
+          });
 
           await db.budget.update({
             where: { id: budget.id },
             data: { lastAlertSent: now },
           });
         }
+      });
+    }
+  }
+);
+
+// ── 2. Monthly insights (runs 1st of every month at 8am) ────
+export const sendMonthlyInsights = inngest.createFunction(
+  {
+    id: "send-monthly-insights",
+    name: "Send Monthly Insights",
+    triggers: [{ cron: "0 8 1 * *" }],
+  },
+  async ({ step }) => {
+    const users = await step.run("get-users", async () => {
+      return await db.user.findMany({
+        include: {
+          accounts: { where: { isDefault: true } },
+          budgets: true,
+        },
+      });
+    });
+
+    for (const user of users) {
+      await step.run(`send-insight-${user.id}`, async () => {
+        const now = new Date();
+        // Last month
+        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        const monthName = lastMonth.toLocaleString("default", { month: "long" });
+        const year = lastMonth.getFullYear();
+
+        const transactions = await db.transaction.findMany({
+          where: {
+            userId: user.id,
+            date: { gte: lastMonth, lte: endOfLastMonth },
+          },
+        });
+
+        if (transactions.length === 0) return;
+
+        const totalIncome = transactions
+          .filter((t) => t.type === "INCOME")
+          .reduce((s, t) => s + t.amount.toNumber(), 0);
+
+        const totalExpenses = transactions
+          .filter((t) => t.type === "EXPENSE")
+          .reduce((s, t) => s + t.amount.toNumber(), 0);
+
+        const netSavings = totalIncome - totalExpenses;
+
+        const spendingByCategory = transactions
+          .filter((t) => t.type === "EXPENSE")
+          .reduce((acc, t) => {
+            acc[t.category] = (acc[t.category] || 0) + t.amount.toNumber();
+            return acc;
+          }, {});
+
+        const topCategories = Object.entries(spendingByCategory)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5);
+
+        const budget = user.budgets?.[0];
+        const budgetAmount = budget ? Number(budget.amount) : null;
+        const percentageUsed = budgetAmount
+          ? (totalExpenses / budgetAmount) * 100
+          : null;
+
+        await sendEmail({
+          to: user.email,
+          subject: `📊 Your ${monthName} financial summary — FinCoach`,
+          react: MonthlyInsightEmail({
+            userName: user.name,
+            month: monthName,
+            year,
+            totalIncome,
+            totalExpenses,
+            netSavings,
+            topCategories,
+            budgetAmount,
+            percentageUsed,
+          }),
+        });
       });
     }
   }

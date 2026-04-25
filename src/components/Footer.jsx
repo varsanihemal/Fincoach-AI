@@ -1,14 +1,41 @@
 import Link from "next/link";
 
 const FinCoachLogo = () => (
-  <svg width="140" height="36" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
-    <rect width="36" height="36" x="0" y="2" rx="7" fill="#185FA5" />
-    <rect x="6" y="24" width="6" height="10" fill="#fff" opacity="0.5" />
-    <rect x="15" y="18" width="6" height="16" fill="#fff" opacity="0.75" />
-    <rect x="24" y="12" width="6" height="22" fill="#fff" />
-    <polyline points="6,24 15,16 24,10 30,7" stroke="#FAC775" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    <text x="44" y="28" fontFamily="system-ui, sans-serif" fontSize="22" fontWeight="600" fill="#fff">Fin</text>
-    <text x="72" y="28" fontFamily="system-ui, sans-serif" fontSize="22" fontWeight="400" fill="#5ba8e8">Coach</text>
+  <svg width="160" height="44" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+    {/* Icon mark */}
+    <rect width="40" height="40" x="0" y="2" rx="10" fill="#06090f" stroke="#1e3a5f" strokeWidth="1"/>
+
+    {/* Rising bars */}
+    <rect x="8"  y="28" width="6" height="10" rx="1.5" fill="#185FA5" opacity="0.4"/>
+    <rect x="17" y="22" width="6" height="16" rx="1.5" fill="#185FA5" opacity="0.7"/>
+    <rect x="26" y="15" width="6" height="23" rx="1.5" fill="#5ba8e8"/>
+
+    {/* Trend line */}
+    <polyline points="11,26 20,20 29,13"
+      stroke="#5dcaa5" strokeWidth="2"
+      fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="29" cy="13" r="2.5" fill="#5dcaa5"/>
+
+    {/* Wordmark */}
+    <text x="48" y="30"
+      fontFamily="system-ui, sans-serif"
+      fontSize="22" fontWeight="500" fill="#ffffff">
+      Fin
+    </text>
+    <text x="76" y="30"
+      fontFamily="system-ui, sans-serif"
+      fontSize="22" fontWeight="400" fill="#5ba8e8">
+      Coach
+    </text>
+
+    {/* AI badge */}
+    <rect x="48" y="34" width="18" height="10" rx="3" fill="#185FA5" fillOpacity="0.2" stroke="#185FA5" strokeWidth="0.8"/>
+    <text x="57" y="42"
+      fontFamily="system-ui, sans-serif"
+      fontSize="8" fontWeight="500" fill="#5ba8e8"
+      textAnchor="middle">
+      AI
+    </text>
   </svg>
 );
 

@@ -85,9 +85,6 @@ const Hero = () => {
                 </span>
               </button>
             </Link>
-            <button className="px-6 py-3.5 rounded-xl text-sm text-slate-300 bg-white/5 border border-white/10">
-              Watch demo
-            </button>
           </div>
 
           {/* Avatars + trust */}
