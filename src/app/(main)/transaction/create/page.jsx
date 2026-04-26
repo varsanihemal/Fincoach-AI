@@ -3,6 +3,8 @@ import AddTransactionForm from "@/components/AddTransactionForm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const CreateTransactionPage = async () => {
   const accounts = await getAccounts();
   const defaultAccount = accounts.find((a) => a.isDefault);
