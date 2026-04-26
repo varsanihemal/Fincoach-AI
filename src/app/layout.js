@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import AiChat from "@/components/AiChat";
+import { Analytics } from "@vercel/analytics/next"
 
 
 const inter = Inter({ subsets: ["latin"] });
