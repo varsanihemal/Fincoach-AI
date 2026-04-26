@@ -42,20 +42,16 @@ const FinCoachLogo = () => (
 const links = {
   Product: [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Add transaction", href: "/transaction/create" },
-    { label: "Goals", href: "/goals" },
-    { label: "Insights", href: "/insights" },
   ],
+
   Company: [
     { label: "About", href: "/about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Careers", href: "/careers" },
     { label: "Contact", href: "/contact" },
   ],
+
   Legal: [
     { label: "Privacy policy", href: "/privacy" },
     { label: "Terms of service", href: "/terms" },
-    { label: "Cookie policy", href: "/cookies" },
   ],
 };
 

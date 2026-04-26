@@ -65,7 +65,7 @@ export async function createTransaction(data) {
 
 export async function scanReceipt(base64Image) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `Analyze this receipt image and extract the following information in JSON format only. No markdown, no explanation, just raw JSON:
 {
