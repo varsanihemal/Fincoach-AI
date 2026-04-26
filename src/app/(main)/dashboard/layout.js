@@ -2,6 +2,8 @@ import { checkUser } from "@/lib/checkUser";
 import { getAccounts, getBudgets, getDashboardData } from "@/actions/dashboard";
 import { ArrowUpRight, ArrowDownRight, Wallet } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({ children }) {
   await checkUser();
 

@@ -5,10 +5,13 @@ import { ArrowLeft, Wallet, PiggyBank } from "lucide-react";
 import Link from "next/link";
 import TransactionTable from "./_components/transaction-table";
 
+export const dynamic = "force-dynamic";
+
 const iconMap = {
   CHECKING: Wallet,
   SAVINGS: PiggyBank,
 };
+
 
 const AccountPage = async ({ params }) => {
   const { id } = await params;

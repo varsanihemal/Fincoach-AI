@@ -8,6 +8,9 @@ import { getAccounts, getDashboardData, getBudgets } from "@/actions/dashboard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
+
+export const dynamic = "force-dynamic"; 
+
 const DashboardPage = async () => {
   const [accounts, transactions, budgetData] = await Promise.all([
     getAccounts(),
