@@ -4,7 +4,6 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export const dynamic = "force-dynamic";
 
 const serializeTransaction = (obj) => {
   const serialized = { ...obj };
